@@ -16,11 +16,11 @@ const todos: Todo[] = [
   },{
     id: 2,
     title: '唱歌',
-    done: true
+    done: false
   },{
   id: 3,
     title: '睡觉',
-    done: false
+    done: true
 }
 ]
 
@@ -48,4 +48,16 @@ export class AppComponent {
     e.target.value = ''
   }
 
+  get toggleAll() {
+    return this.todos.every(t => t.done)
+    // 当调用toggleAll时，回以每一个dodos.done是否为真（还未完全理解）
+  }
+
+  set toggleAll(val) {
+    this.todos.forEach(t => t.done = val)
+  }
+
+  removerTodo(i: number) {
+    this.todos.splice(i,1)
+  }
 }

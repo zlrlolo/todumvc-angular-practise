@@ -2,14 +2,20 @@
   <header class="header">
     <h1>todos</h1>
     <input class="new-todo" placeholder="What needs to be done?" autofocus
-           (keyup.enter)= "addTodo($event)">
-<!--keyup.enter是angular的事件绑定，将按下enter的事件绑定调用addTodo这个方法，并将事件内容传入-->
+           (keyup.enter)="addTodo($event)">
+    <!--keyup.enter是angular的事件绑定，将按下enter的事件绑定调用addTodo这个方法，并将事件内容传入-->
   </header>
-  <!-- This section should be hidden by default and shown when there are todos -->
+  <!-- This section should be hidden by default and shown when  are todos -->
   <ng-container *ngIf="todos.length">
     <!--ng-container是ng-容器标签-->
     <section class="main">
-      <input id="toggle-all" class="toggle-all" type="checkbox">
+      <input id="toggle-all" class="toggle-all"
+             type="checkbox"
+             [checked]="toggleAll"
+             (change)="toggleAll = $any ($event.target)?.checked">
+      <!--(change)="toggleAll = true">-->
+      <!-- 是否被选中，取决于toggleAll的布尔值-->
+      <!-- toggleAll的变化和这个按钮的check属性双向绑定 （未完全理解 ）-->
       <label for="toggle-all">Mark all as complete</label>
       <ul class="todo-list">
         <!-- These are here just to show the structure of the list items -->
@@ -17,14 +23,14 @@
         <!--      正常状态 没有样式-->
         <!--      完成状态 completed-->
         <!--      编辑状态 editing-->
-        <li *ngFor="let todo of todos" [class]="{completed:todo.done}">
-<!-- 遍历输出todos（取名为todo，方便其他地方引用）的每一个元素-->
-<!-- 样式的类是否是completed，取决于todo.done这个布尔值的是或否-->
+        <li *ngFor="let todo of todos;let i=index;" [class]="{completed:todo.done}">
+          <!-- 遍历输出todos（取名为todo，方便其他地方引用）的每一个元素-->
+          <!-- 样式的类是否是completed，取决于todo.done这个布尔值的是或否-->
           <div class="view">
-            <input class="toggle" type="checkbox" [(ngModel)]="todo.done" >
-<!--双向绑定todo.done这个布尔值和input这个控件-->
+            <input class="toggle" type="checkbox" [(ngModel)]="todo.done">
+            <!--双向绑定todo.done这个布尔值和input这个控件-->
             <label>{{todo.title}}</label>
-            <button class="destroy"></button>
+            <button class="destroy" (click)="removerTodo(i)"></button>
           </div>
         </li>
       </ul>
