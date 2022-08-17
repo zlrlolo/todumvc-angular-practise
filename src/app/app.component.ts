@@ -7,21 +7,22 @@ interface Todo {
   title: string,
   done: boolean
 }
+
 // 生成一个空数组，内部元素类型为Todo。
 const todos: Todo[] = [
   {
     id: 1,
     title: '吃饭',
     done: true
-  },{
+  }, {
     id: 2,
     title: '唱歌',
     done: false
-  },{
-  id: 3,
+  }, {
+    id: 3,
     title: '睡觉',
     done: true
-}
+  }
 ]
 
 @Component({
@@ -33,7 +34,9 @@ export class AppComponent {
   // 将组员todos等于todos这个空数组，该组员类型为Todo数组
   public todos: Todo[] = todos
 
+  public currentEditing?: Todo = undefined
 
+// 用一个叫当前编辑的变量记录写作状态，有值就是在写，没有值就是不在
   addTodo(e: any) {
     const titleText = (<HTMLInputElement>e.target).value
     if (!titleText.length) {
@@ -58,6 +61,30 @@ export class AppComponent {
   }
 
   removerTodo(i: number) {
-    this.todos.splice(i,1)
+    console.log(2)
+    this.todos.splice(i, 1)
+  }
+
+  saveEdit(todo: Todo, e: any) {
+    this.currentEditing = undefined
+    todo.title = e.target.value
+// 保存数据
+  }
+
+  handleEditKeyUp(e: any) {
+    const {keyCode, target} = e
+    if (keyCode === 27) {
+      // 取消编辑 keycode为27
+      target.value = this.currentEditing?.title
+      this.currentEditing = undefined
+    }
+  }
+
+  get remaningCount() {
+    return this.todos.filter(t=>!t.done).length
+  }
+
+  clearAllDone() {
+    this.todos=this.todos.filter(t=>!t.done)
   }
 }
