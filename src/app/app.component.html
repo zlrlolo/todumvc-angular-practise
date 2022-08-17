@@ -23,7 +23,7 @@
         <!--      正常状态 没有样式-->
         <!--      完成状态 completed-->
         <!--      编辑状态 editing-->
-        <li *ngFor="let todo of todos;let i=index;"
+        <li *ngFor="let todo of filterTodos;let i=index;"
             [class]="{
               completed:  todo.done,
               editing:  currentEditing  === todo

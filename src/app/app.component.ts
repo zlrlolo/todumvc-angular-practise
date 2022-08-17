@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {combineLatest} from "rxjs";
 
 // 接口约束这一类型为Todo
 interface Todo {
@@ -35,6 +34,20 @@ export class AppComponent {
   public todos: Todo[] = todos
 
   public currentEditing?: Todo = undefined
+  public visibility: string = 'all'
+
+  get toggleAll() {
+    return this.todos.every(t => t.done)
+    // 当调用toggleAll时，回以每一个dodos.done是否为真（还未完全理解）
+  }
+
+  set toggleAll(val) {
+    this.todos.forEach(t => t.done = val)
+  }
+
+  get remaningCount() {
+    return this.todos.filter(t => !t.done).length
+  }
 
 // 用一个叫当前编辑的变量记录写作状态，有值就是在写，没有值就是不在
   addTodo(e: any) {
@@ -49,15 +62,6 @@ export class AppComponent {
       done: false
     })
     e.target.value = ''
-  }
-
-  get toggleAll() {
-    return this.todos.every(t => t.done)
-    // 当调用toggleAll时，回以每一个dodos.done是否为真（还未完全理解）
-  }
-
-  set toggleAll(val) {
-    this.todos.forEach(t => t.done = val)
   }
 
   removerTodo(i: number) {
@@ -80,11 +84,18 @@ export class AppComponent {
     }
   }
 
-  get remaningCount() {
-    return this.todos.filter(t=>!t.done).length
+  clearAllDone() {
+    this.todos = this.todos.filter(t => !t.done)
   }
 
-  clearAllDone() {
-    this.todos=this.todos.filter(t=>!t.done)
+  get filterTodos() {
+    if (this.visibility === 'all') {
+      return this.todos
+    } else if (this.visibility === 'active') {
+      return this.todos.filter(t => !t.done)
+    } else {
+      return this.todos.filter(t => t.done)
+    }
   }
 }
+
